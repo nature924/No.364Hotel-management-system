@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cow.hotel.mapper.OccupancyRateMapper">
+
+    <resultMap id="OccupancyRateResultMap" type="cn.cow.hotel.entity.OccupancyRate">
+        <result property="month" column="month"/>
+        <result property="occupancyRate" column="occupancy_rate"/>
+    </resultMap>
+
+    <select id="getOccupancyRates" resultMap="OccupancyRateResultMap">
+        SELECT months.month,
+               IFNULL(CONVERT((CAST(check_ins.total_check_ins AS DECIMAL) / room_count.total_rooms) * 100, DECIMAL(10,2)), 0) AS occupancy_rate
+        FROM (
+                 SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION
+                 SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION
+                 SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+             ) AS months
+                 LEFT JOIN (
+            SELECT MONTH(order_date) AS month,
+                COUNT(*) AS total_check_ins
+            FROM order_info
+            WHERE order_status = 2
+            GROUP BY MONTH(order_date)
+        ) AS check_ins ON months.month = check_ins.month
+                 CROSS JOIN (
+            SELECT COUNT(*) AS total_rooms
+            FROM room_info
+        ) AS room_count;
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: "/ho-api"
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1226422
+    url: jdbc:mysql://localhost:3306/hotel?characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+mybatis-plus:
+  type-aliases-package: classpath*:cn.cow.hotel.entity
+  mapper-locations: classpath*:mybatis/mapper/*.xml
+
